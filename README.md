@@ -14,7 +14,7 @@
 
 # Run with Docker Compose
 
-## Install Docker and Docker Compose
+## Install
 ```shell
 sudo apt-get update
 sudo apt-get install docker.io -y
@@ -27,5 +27,5 @@ docker-compose version
 
 ## Run 
 ```shell
-docker-compose up
+docker-compose up --build
 ```
