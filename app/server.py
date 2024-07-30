@@ -1,7 +1,8 @@
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from websockets.exceptions import ConnectionClosed
 
 from app.auth.adapter.input.api import router as auth_router
 from app.container import Container
@@ -75,8 +76,8 @@ def init_cache() -> None:
 
 def create_app() -> FastAPI:
     app_ = FastAPI(
-        title="Hide",
-        description="Hide API",
+        title="Mock FastAPI Server",
+        description="Mock server for REST API and Websocket connection tests",
         version="1.0.0",
         docs_url=None if config.ENV == "production" else "/docs",
         redoc_url=None if config.ENV == "production" else "/redoc",
@@ -90,3 +91,30 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+@app.get("/")
+async def root():
+    # This is just a test to ensure the server works
+    return {"message": "Connected to mock server successfully!"}
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    # await for connections
+    await websocket.accept()
+    
+    try:
+        # send "Connection established" message to client
+        await websocket.send_text("Connection established!")
+        
+        # await for messages and send messages
+        while True:
+            msg = await websocket.receive_text()
+            if msg.lower() == "close":
+                await websocket.close()
+                break
+            else:
+                print(f'CLIENT says - {msg}')
+                await websocket.send_text(f"Your message was: {msg}")
+                
+    except (WebSocketDisconnect, ConnectionClosed):
+        print("Client disconnected")
