@@ -12,9 +12,20 @@
 - Event dispatcher
 - Cache
 
-## Run with Docker
+## Run with Docker Compose
 
+Install Docker and Docker Compose
 ```shell
-> docker-compose up
+sudo apt-get update
+sudo apt-get install docker.io -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose version
 ```
+
+Run 
+```shell
+docker-compose up
 ```
