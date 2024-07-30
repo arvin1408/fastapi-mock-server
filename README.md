@@ -12,9 +12,9 @@
 - Event dispatcher
 - Cache
 
-## Run with Docker Compose
+# Run with Docker Compose
 
-Install Docker and Docker Compose
+## Install Docker and Docker Compose
 ```shell
 sudo apt-get update
 sudo apt-get install docker.io -y
@@ -25,7 +25,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose version
 ```
 
-Run 
+## Run 
 ```shell
 docker-compose up
 ```
