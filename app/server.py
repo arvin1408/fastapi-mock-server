@@ -2,12 +2,14 @@ from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from websockets.exceptions import ConnectionClosed
 
 from app.auth.adapter.input.api import router as auth_router
 from app.container import Container
 from app.user.adapter.input.api import router as user_router
 from app.websocket.adapter.input.api import router as websocket_router
+from app.websocket.adapter.input.api.v1.socketio import NoPrefixNamespace
 
 from core.config import config
 from core.exceptions import CustomException
@@ -19,6 +21,8 @@ from core.fastapi.middlewares import (
     SQLAlchemyMiddleware,
 )
 from core.helpers.cache import Cache, CustomKeyMaker, RedisBackend
+from core.socketio.socketio import sio
+import socketio
 
 
 def init_routers(app_: FastAPI) -> None:
@@ -77,6 +81,13 @@ def make_middleware() -> list[Middleware]:
 def init_cache() -> None:
     Cache.init(backend=RedisBackend(), key_maker=CustomKeyMaker())
 
+# TO DEBUG
+def init_socketio(app_: FastAPI) -> None:
+    socketio_server = sio.register_namespace(NoPrefixNamespace("/"))
+    sio_asgi_app = socketio.ASGIApp(socketio_server=socketio_server, other_asgi_app=app_)
+    app_.add_route("/api/v1/io", route=sio_asgi_app, methods=["GET", "POST"])
+    app_.add_websocket_route("/api/v1/io", sio_asgi_app)
+
 
 def create_app() -> FastAPI:
     app_ = FastAPI(
@@ -91,6 +102,9 @@ def create_app() -> FastAPI:
     init_routers(app_=app_)
     init_listeners(app_=app_)
     init_cache()
+    # init_socketio(app_=app_)
+    # app_.mount("/app/app/static", StaticFiles(directory="/app/app/static"), name="static")
+
     return app_
 
 

@@ -17,3 +17,4 @@ class WebSocketService:
                     await websocket.send_text(f"Your message was: {msg}")
         except (WebSocketDisconnect, ConnectionClosed):
             print("Client disconnected")
+        
