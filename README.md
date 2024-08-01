@@ -58,5 +58,6 @@ Sample login response
 ```
 
 - Websocket endpoint: ws://localhost:8000/api/v1/ws/connect
+
 Websocket connection with Bearer token provided
 ![Test screenshot](assets/screenshot.png)
