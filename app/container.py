@@ -5,7 +5,7 @@ from app.auth.application.service.jwt import JwtService
 from app.user.adapter.output.persistence.repository_adapter import UserRepositoryAdapter
 from app.user.adapter.output.persistence.sqlalchemy.user import UserSQLAlchemyRepo
 from app.user.application.service.user import UserService
-
+from app.websocket.application.service.websocket import WebSocketService
 
 class Container(DeclarativeContainer):
     wiring_config = WiringConfiguration(packages=["app"])
@@ -15,3 +15,5 @@ class Container(DeclarativeContainer):
     user_service = Factory(UserService, repository=user_repo_adapter)
 
     jwt_service = Factory(JwtService)
+
+    websocket_service = Factory(WebSocketService)    

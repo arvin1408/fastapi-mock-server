@@ -13,7 +13,7 @@ user_router = APIRouter()
 
 
 @user_router.get(
-    "",
+    "/get_user_list",
     response_model=list[GetUserListResponseDTO],
     dependencies=[Depends(PermissionDependency([IsAdmin]))],
 )
@@ -27,7 +27,7 @@ async def get_user_list(
 
 
 @user_router.post(
-    "",
+    "/create_user",
     response_model=CreateUserResponseDTO,
 )
 @inject

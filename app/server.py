@@ -7,6 +7,8 @@ from websockets.exceptions import ConnectionClosed
 from app.auth.adapter.input.api import router as auth_router
 from app.container import Container
 from app.user.adapter.input.api import router as user_router
+from app.websocket.adapter.input.api import router as websocket_router
+
 from core.config import config
 from core.exceptions import CustomException
 from core.fastapi.dependencies import Logging
@@ -23,8 +25,10 @@ def init_routers(app_: FastAPI) -> None:
     container = Container()
     user_router.container = container
     auth_router.container = container
+    websocket_router.container = container
     app_.include_router(user_router)
     app_.include_router(auth_router)
+    app_.include_router(websocket_router)    
 
 
 def init_listeners(app_: FastAPI) -> None:
@@ -94,27 +98,4 @@ app = create_app()
 
 @app.get("/")
 async def root():
-    # This is just a test to ensure the server works
-    return {"message": "Connected to mock server successfully!"}
-
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    # await for connections
-    await websocket.accept()
-    
-    try:
-        # send "Connection established" message to client
-        await websocket.send_text("Connection established!")
-        
-        # await for messages and send messages
-        while True:
-            msg = await websocket.receive_text()
-            if msg.lower() == "close":
-                await websocket.close()
-                break
-            else:
-                print(f'CLIENT says - {msg}')
-                await websocket.send_text(f"Your message was: {msg}")
-                
-    except (WebSocketDisconnect, ConnectionClosed):
-        print("Client disconnected")
+    return {"message": "Connected to server successfully!"}
