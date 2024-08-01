@@ -3,7 +3,7 @@
 - FastAPI + Poetry setup Dockerized
 - Run with single docker-compose command
 
-# Features
+## Features
 - Async SQLAlchemy session
 - Custom user class
 - Dependencies for specific permissions
@@ -12,9 +12,9 @@
 - Event dispatcher
 - Cache
 
-# Run with Docker Compose
+## Run with Docker Compose
 
-## Install
+### Install
 Tested on Ubuntu 22.04. Check [here](https://docs.docker.com/engine/install/) for other platforms.
 ```shell
 sudo apt-get update
@@ -29,13 +29,13 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose version
 ```
 
-## Run 
+### Run 
 ```shell
 docker-compose up --build
 ```
-# Test endpoints
+## Test endpoints
 
-## REST API
+### REST API
 - Check documentation: http://localhost:8000/docs
 
 Sample login request after creating user
@@ -58,7 +58,7 @@ Sample login response
 }
 ```
 
-## Websocket
+### Websocket
 - Connect route: ws://localhost:8000/api/v1/ws/connect
 
 Websocket connection with Bearer token provided
