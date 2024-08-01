@@ -16,7 +16,6 @@ class WebSocketService:
         self.jwt_service = JwtService()     
 
     async def authenticate(self, websocket: WebSocket) -> None:
-        await websocket.accept()
         
         token = None
 
@@ -38,12 +37,12 @@ class WebSocketService:
         try:
             await self.jwt_service.verify_token(token)
         except (DecodeTokenException, JwtDecodeTokenException, JwtExpiredTokenException):
-            print(f'Invalid token: {token}')
             await websocket.close(code=4002, reason="Invalid token")
-            return
+            raise DecodeTokenException("Invalid token")
     
     async def handle_connection(self, websocket: WebSocket) -> None:
         await self.authenticate(websocket)
+        await websocket.accept()
         await websocket.send_text("Client connected.")
 
         try:
