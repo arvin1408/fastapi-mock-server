@@ -36,3 +36,5 @@ docker-compose up --build
 ## Access endpoints
 - REST endpoints: http://localhost:8000/docs
 - Websocket endpoint: ws://localhost:8000/api/v1/ws/connect
+
+![Test screenshot](assets/screenshot.png)
