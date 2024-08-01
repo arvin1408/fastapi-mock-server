@@ -33,19 +33,20 @@ docker-compose version
 ```shell
 docker-compose up --build
 ```
+# Test endpoints
 
-## Access endpoints
-- REST endpoints: http://localhost:8000/docs
+## REST API
+- Check documentation: http://localhost:8000/docs
 
-Sample login request
+Sample login request after creating user
 ```shell
 curl -X 'POST' \
   'http://localhost:8000/api/v1/user/login' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "email": "string",
-  "password": "string"
+  "email": "user@example.com",
+  "password": "password"
 }'
 ```
 
@@ -57,7 +58,8 @@ Sample login response
 }
 ```
 
-- Websocket endpoint: ws://localhost:8000/api/v1/ws/connect
+## Websocket
+- Connect route: ws://localhost:8000/api/v1/ws/connect
 
 Websocket connection with Bearer token provided
 ![Test screenshot](assets/screenshot.png)
