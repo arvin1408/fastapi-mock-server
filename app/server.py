@@ -17,7 +17,9 @@ from core.fastapi.middlewares import (
     AuthenticationMiddleware,
     ResponseLogMiddleware,
     SQLAlchemyMiddleware,
+    CSPMiddleware    
 )
+
 from core.helpers.cache import Cache, CustomKeyMaker, RedisBackend
 
 
@@ -53,7 +55,7 @@ def on_auth_error(request: Request, exc: Exception):
         content={"error_code": error_code, "message": message},
     )
 
-
+    
 def make_middleware() -> list[Middleware]:
     middleware = [
         Middleware(
@@ -70,6 +72,8 @@ def make_middleware() -> list[Middleware]:
         ),
         Middleware(SQLAlchemyMiddleware),
         Middleware(ResponseLogMiddleware),
+        Middleware(CSPMiddleware),
+
     ]
     return middleware
 
