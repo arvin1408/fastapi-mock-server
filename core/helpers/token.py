@@ -17,6 +17,10 @@ class ExpiredTokenException(CustomException):
     error_code = "TOKEN__EXPIRE_TOKEN"
     message = "expired token"
 
+class MissingTokenException(CustomException):
+    code = 400
+    error_code = "TOKEN__MISSING_ERROR"
+    message = "token missing error"
 
 class TokenHelper:
     @staticmethod
