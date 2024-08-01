@@ -15,6 +15,7 @@
 # Run with Docker Compose
 
 ## Install
+Tested on Ubuntu 22.04. Check [here](https://docs.docker.com/engine/install/) for other platforms.
 ```shell
 sudo apt-get update
 sudo apt-get install docker.io -y
@@ -35,6 +36,27 @@ docker-compose up --build
 
 ## Access endpoints
 - REST endpoints: http://localhost:8000/docs
-- Websocket endpoint: ws://localhost:8000/api/v1/ws/connect
 
+Sample login request
+```shell
+curl -X 'POST' \
+  'http://localhost:8000/api/v1/user/login' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "email": "string",
+  "password": "string"
+}'
+```
+
+Sample login response
+```shell
+{
+    "token": "eyJhbGciOi...",
+    "refresh_token": "eyJhbGci..."
+}
+```
+
+- Websocket endpoint: ws://localhost:8000/api/v1/ws/connect
+Websocket connection with Bearer token provided
 ![Test screenshot](assets/screenshot.png)
