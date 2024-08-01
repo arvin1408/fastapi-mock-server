@@ -1,9 +1,6 @@
 # Use the specified Bitnami Python image
 FROM bitnami/python:3.11.9
 
-# Set the working directory in the container
-WORKDIR /app
-
 # Install system dependencies
 RUN apt-get update && \
     apt-get install -y gnupg2 && \
@@ -16,6 +13,7 @@ RUN apt-get update && \
     libportaudiocpp0 \
     portaudio19-dev \
     ffmpeg \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 ENV YOUR_ENV=${YOUR_ENV} \
@@ -36,16 +34,20 @@ ENV YOUR_ENV=${YOUR_ENV} \
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Copy only requirements to cache them in docker layer
-COPY ../poetry.lock ../pyproject.toml /app/
+COPY poetry.lock pyproject.toml ./
 
 # Project initialization:
 RUN poetry install $(test "$YOUR_ENV" == production && echo "--only=main") --no-interaction --no-ansi
 
 # Creating folders, and files for a project:
-COPY .. /app
+COPY . .
 
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Command to run the application
-CMD ["python", "/app/main.py", "--env", "local", "--debug"] # --env local|dev|prod --debug
+# Copy the startup script
+COPY start.sh .
+RUN chmod +x start.sh
+
+# Set the startup script as the entry point
+ENTRYPOINT ["./start.sh"]
