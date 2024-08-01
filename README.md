@@ -2,6 +2,7 @@
 - Based on FastAPI production template: https://github.com/teamhide/fastapi-boilerplate.git
 - FastAPI + Poetry setup Dockerized
 - Run with single docker-compose command
+- Added websocket service routes and adapters
 
 ## Features
 - Async SQLAlchemy session
