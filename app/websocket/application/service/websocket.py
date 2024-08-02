@@ -19,10 +19,12 @@ class WebSocketService:
         
         token = None
 
-        # Extract the token from the WebSocket's subprotocols
-        protocols = websocket.scope.get('subprotocols', [])
-        if len(protocols) == 2 and protocols[0] == 'jwt':
-            token = protocols[1]
+        # Extract the bearer token from the Sec-WebSocket-Protocol header
+        protocols = websocket.headers.get("Sec-WebSocket-Protocol", "").split(", ")
+        bearer_protocol = next((p for p in protocols if p.startswith("bearer.")), None)
+        
+        if bearer_protocol:
+            token = bearer_protocol.split(".", 1)[1]
 
         # If not found in subprotocols, try to get token from headers
         if not token:
@@ -36,13 +38,13 @@ class WebSocketService:
             
         try:
             await self.jwt_service.verify_token(token)
+            await websocket.accept(subprotocol=bearer_protocol)
         except (DecodeTokenException, JwtDecodeTokenException, JwtExpiredTokenException):
             await websocket.close(code=4002, reason="Invalid token")
             raise DecodeTokenException("Invalid token")
     
     async def handle_connection(self, websocket: WebSocket) -> None:
         await self.authenticate(websocket)
-        await websocket.accept()
         await websocket.send_text("Client connected.")
 
         try:
